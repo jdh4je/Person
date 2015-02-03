@@ -1,0 +1,122 @@
+import java.util.ArrayList;
+
+public class Person {
+	private String name;
+	private int id;
+	private ArrayList<Book> read;
+
+	Person(String name, int id) {
+		this.name = name;
+		this.id = id;
+		this.read = new ArrayList<Book>();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public ArrayList<Book> getRead() {
+		return read;
+	}
+
+	public boolean addBook(Book b) {
+		if (!read.contains(b)) {
+			read.add(b);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean hasRead(Book b) {
+		if (read.contains(b)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean forgetBook(Book b) {
+		if (read.contains(b)) {
+			read.remove(b);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public int numBooksRead() {
+		return read.size();
+	}
+
+	public boolean equals(Object o) {
+		boolean retVal = false;
+
+		if (o instanceof Person) {
+			Person other = (Person) o;
+			retVal = this.getId() == other.getId();
+		}
+
+		return retVal;
+	}
+
+	public String toString() {
+		return "Name: " + name + "\t|| ID: " + id + "\t|| Books Read: " + read;
+	}
+
+	public static ArrayList<Book> commonBooks(Person a, Person b) {
+		ArrayList<Book> commonlist = new ArrayList<Book>();
+		for (int i = 0; i < a.numBooksRead(); i++) {
+			for (int j = 0; j < b.numBooksRead(); j++) {
+				if (a.getRead().get(i).equals(b.getRead().get(j))) {
+					commonlist.add(a.getRead().get(i));
+				}
+			}
+		}
+		return commonlist;
+	}
+
+	public static double similarity(Person a, Person b) {
+		if (a.read.size() == 0 && b.read.size() == 0) {
+			return 0.0;
+		}
+		double commonBooksSize = commonBooks(a, b).size();
+		if (a.numBooksRead() < b.numBooksRead()) {
+			return commonBooksSize / a.numBooksRead();
+		} else {
+			return commonBooksSize / b.numBooksRead();
+		}
+	}
+
+	public static void main(String[] args) {
+		Book one = new Book("HarryPotter", "JK Rowling");
+		Book two = new Book("Catch 22", "IDK");
+		Book three = new Book("The Cat In The Hat", "Dr. Seuss");
+		Book four = new Book("The Bell Jar", "Sylvia Plath");
+
+		Person one1 = new Person("Bob", 1234);
+		Person two1 = new Person("Jimmy", 1234);
+
+		one1.addBook(one);
+		one1.addBook(two);
+		two1.addBook(one);
+		// two1.addBook(two);
+		two1.addBook(three);
+		two1.addBook(four);
+
+		System.out.println(similarity(one1, two1));
+		System.out.println(one1.toString());
+		System.out.println(two1.toString());
+		System.out.println(one1.equals(two1));
+		System.out.println(one.equals(one));
+	}
+
+}
